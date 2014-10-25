@@ -1,0 +1,10 @@
+{
+    "version": "1.0",
+    "summary": "Game for the Myo armband",
+    "description": "A cow-themed mini-game designed to be played with the Myo armband",
+    "license": "MIT",
+    "exposed-modules": [],
+    "elm-version": "0.13",
+    "dependencies": {},
+    "repository": "https://github.com/theburningmonk/elm-thunder-cow.git"
+}
