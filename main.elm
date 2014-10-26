@@ -3,7 +3,7 @@ module ThunderCow where
 import Keyboard
 import Signal
 
-backtick = 223
+backtick = 192
 w        = 600
 h        = 500
 barH     = 400
