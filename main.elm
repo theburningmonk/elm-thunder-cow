@@ -1,8 +1,7 @@
-import Debug
+module ThunderCow where
+
 import Keyboard
-import Maybe
 import Signal
-import Window
 
 backtick = 223
 w        = 600
@@ -12,7 +11,7 @@ great    = 0.1 -- get into top 10%
 notBad   = 0.4 -- get into top 40%
 type RoundState  = { meter:Float, speed:Float }
 data ResultKind  = Great | NotBad | Ok
-type ResultState = { score:Float, kind:ResultKind, time:Int }
+type ResultState = { score:Float, kind:ResultKind, time:Int, playSound:String }
 data GameState   = Round  RoundState
                    | Result ResultState
                    | NotStarted
@@ -24,17 +23,19 @@ stepGame hold state =
     Round {meter, speed} -> 
       if not hold 
       then 
-        let kind = if | meter >= 1 - great  -> Great
-                      | meter >= 1 - notBad -> NotBad
-                      | otherwise           -> Ok
-        in Result { score=meter, kind=kind, time=180 }
+        let (kind, sound) = 
+          if | meter >= 1 - great  -> (Great, "red_fart")
+             | meter >= 1 - notBad -> (NotBad, "orange_fart")
+             | otherwise           -> (Ok, "green_fart")
+        in Result { score=meter, kind=kind, time=180, playSound=sound }
       else
         let newMeter = clamp 0 1 <| meter + speed
             newSpeed = if newMeter == 1 || newMeter == 0 then -speed else speed
         in Round { meter=newMeter, speed=newSpeed }
     Result restulState ->
       if restulState.time == 0 then NotStarted
-      else Result { restulState | time <- restulState.time-1 }
+      else Result { restulState | time <- restulState.time-1
+                                , playSound <- "" }
   
 drawBackground () =
   let background = fittedImage w h "background.jpg"
@@ -71,4 +72,13 @@ display state =
 
 hold  = sampleOn (fps 75) (Keyboard.isDown backtick)
 state = foldp stepGame NotStarted hold
+
+getPlaySound state =
+  case state of
+    Result { playSound } -> playSound
+    _ -> ""
+
+port playSound : Signal String
+port playSound = Signal.dropIf (\s -> s == "") "" (getPlaySound <~ state)
+
 main  = display <~ state

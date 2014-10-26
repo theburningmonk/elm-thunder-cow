@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Thunder Cow</title>
+	    
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-12216268-1']);
+      _gaq.push(['_setDomainName', 'theburningmonk.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+	
+	<script type="text/javascript" src="http://elm-lang.org/elm-runtime.js"></script>
+    <script type="text/javascript" src="build/main.js"></script>	
+	
+  </head>
+  
+  <audio id="green_fart"  src="green_fart.mp3"  preload="auto"></audio>
+  <audio id="orange_fart" src="orange_fart.mp3" preload="auto"></audio>
+  <audio id="red_fart"    src="red_fart.mp3"    preload="auto"></audio>
+  
+  <body>
+    <div id="canvas" style="width:600px; height:500px"></div>
+  </body>
+  
+  <script type="text/javascript">
+    function playSound(id) {
+		if (id.length) {
+			document.getElementById(id).play();
+		}
+	}
+  
+    var div = document.getElementById('canvas');
+    var embed = Elm.embed(Elm.ThunderCow, div);
+	
+	embed.ports.playSound.subscribe(playSound);
+	
+  </script>
+</html>
